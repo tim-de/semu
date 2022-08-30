@@ -2,7 +2,7 @@
 
 P_NAME = semu
 
-CC = g++
+CC = gcc
 
 DEPFILE = .depends
 DEPTOKEN = '\#MAKEDEPENDS'
@@ -16,7 +16,7 @@ INCLUDES =
 LFLAGS = 
 #LFLAGS = any library paths go here
 
-LIBS = 
+LIBS = -lstdc++
 #LIBS = any libraries to link in go here
 
 SRCS = main.cpp State.cpp #_Srcs Add all additional source files here
@@ -37,7 +37,7 @@ $(MAIN): $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm *.o *~ $(MAIN)
+	rm -f *.o *~ $(DEPFILE)* $(P_NAME)
 
 depend:
 	rm $(DEPFILE)

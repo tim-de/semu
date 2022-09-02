@@ -1,3 +1,4 @@
 *.o
 .depends*
 semu
+.ccls-cache

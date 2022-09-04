@@ -1,7 +1,7 @@
 #include<string>
 #include<iostream>
 
-#include"Ram.h"
+#include"Ram.hpp"
 
 Ram::Ram(Width::Enum width):
 	_width(width)

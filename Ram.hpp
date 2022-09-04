@@ -4,7 +4,7 @@
 #include<string>
 #include<iostream>
 
-#include "State.h"
+#include "State.hpp"
 
 class Ram {
 	public:

@@ -4,7 +4,7 @@
 #include<string>
 #include<iostream>
 
-#include"MemoryMap.h"
+#include"MemoryMap.hpp"
 
 namespace Width {
 	enum Enum {

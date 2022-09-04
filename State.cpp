@@ -1,14 +1,16 @@
 #include<string>
 #include<iostream>
 
-#include"State.h"
+#include"State.hpp"
 
 State::State(Width::Enum width, bool debug):
 	_width(width),
 	_pc(0),
 	_debug(debug),
 	_interface(width)
-{}
+{
+	_interface.addMap((1 << (8 << _width)) - 1);
+}
 
 const Width::Enum State::width(void) const {
 	return _width;

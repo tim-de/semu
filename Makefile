@@ -19,7 +19,7 @@ LFLAGS =
 LIBS = -lstdc++
 #LIBS = any libraries to link in go here
 
-SRCS = main.cpp State.cpp MemoryMap.cpp Ram.cpp #_Srcs Add all additional source files here
+SRCS = main.cpp State.cpp MemoryMap.cpp Ram.cpp Peripheral.cpp Port.cpp #_Srcs Add all additional source files here
 
 #OBJS is defined by replacing .c in every source file by .o
 OBJS = $(SRCS:.cpp=.o)

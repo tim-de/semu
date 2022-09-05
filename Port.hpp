@@ -4,6 +4,8 @@
 #include<string>
 #include<iostream>
 
+#include"Utils.hpp"
+
 namespace PortType {
 	enum Enum {
 		IO,
@@ -11,21 +13,33 @@ namespace PortType {
 	};
 }
 
-class Port {
+class GPort {
 	public:
-		Port();//uint32_t addr, void (*writeFunc) (uint32_t), uint32_t (*readFunc) (void));
-		virtual ~Port();
+		GPort();
+		virtual ~GPort() =0;
 		virtual void write(const uint32_t value) =0;
-		virtual const uint32_t read(void) const =0;
+		virtual const uint32_t read(const Element::Enum elem) const =0;
 };
 
-class IoPort: public Port {
+class Port {
+	private:
+		GPort* _port;
 	public:
-		const uint32_t read(void) const;
+		Port();
+		Port(uint32_t& value);
+		Port(uint32_t& r_value, uint32_t& w_value);
+		~Port();
+		void write(const uint32_t value);
+		const uint32_t read(const Element::Enum elem) const;
+};
+
+class IoPort: public GPort {
+	public:
+		const uint32_t read(const Element::Enum elem) const;
 		void write(const uint32_t value);
 };
 
-class LinkPort: public Port {
+class LinkPort: public GPort {
 	private:
 		uint32_t& _rval;
 		uint32_t& _wval;
@@ -33,7 +47,7 @@ class LinkPort: public Port {
 		LinkPort(LinkPort& oldport);
 		LinkPort(uint32_t& value);
 		LinkPort(uint32_t& r_value, uint32_t& w_value);
-		const uint32_t read(void) const;
+		const uint32_t read(const Element::Enum elem) const;
 		void write(const uint32_t value);
 };
 

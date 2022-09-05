@@ -2,15 +2,52 @@
 #include<iostream>
 
 #include"Port.hpp"
+#include"Utils.hpp"
 
-const uint32_t IoPort::read(void) const
+GPort::GPort() { }
+GPort::~GPort() { }
+
+Port::Port()
 {
-	return (uint32_t) getchar();
+	_port = new IoPort;
+}
+
+Port::Port(uint32_t& value)
+{
+	_port = new LinkPort(value);
+}
+
+Port::Port(uint32_t& r_value, uint32_t& w_value)
+{
+	_port = new LinkPort(r_value, r_value);
+}
+
+Port::~Port()
+{
+	delete _port;
+}
+
+void Port::write(const uint32_t value) {
+	_port->write(value);
+}
+const uint32_t Port::read(const Element::Enum elem) const {
+	return _port->read(elem);
+}
+
+const uint32_t IoPort::read(const Element::Enum elem) const
+{
+	switch (elem) {
+		case Element::min:
+			return 0;
+			break;
+		default:
+			return (uint32_t) getchar();
+	}
 }
 
 void IoPort::write(const uint32_t value)
 {
-	putchar((int) value & 0xff);
+	putchar((int8_t) value & 0xff);
 }
 
 LinkPort::LinkPort(LinkPort& oldport):
@@ -28,7 +65,7 @@ LinkPort::LinkPort(uint32_t& r_value, uint32_t& w_value):
 	_wval(w_value)
 { }
 
-const uint32_t LinkPort::read(void) const
+const uint32_t LinkPort::read(const Element::Enum elem) const
 {
 	return _rval;
 }

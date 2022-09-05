@@ -1,6 +1,8 @@
 #include<string>
 #include<iostream>
 
+#include"Utils.hpp"
+
 #include"State.hpp"
 
 State::State(Width::Enum width, bool debug):
@@ -18,7 +20,7 @@ const Width::Enum State::width(void) const {
 
 void State::cycle(void)
 {
-	int32_t b;
+	uint32_t min, sub, dif;
 	uint32_t A, B, C;
 
 	// If the computer has reached a halt state then do not perform
@@ -27,9 +29,9 @@ void State::cycle(void)
 		return;
 	}
 
-	A = _interface.fetchVal(_pc);
-	B = _interface.fetchVal(_pc+1);
-	C = _interface.fetchVal(_pc+2);
+	A = _interface.fetchVal(_pc, Element::addr);
+	B = _interface.fetchVal(_pc+1, Element::addr);
+	C = _interface.fetchVal(_pc+2, Element::addr);
 
 	if (_debug) {
 		std::cout << std::showbase << std::hex << _pc << ": ";
@@ -38,15 +40,17 @@ void State::cycle(void)
 		std::cout << std::showbase << std::hex << C << std::endl;
 	}
 
-	b = _interface.fetchVal(B) - _interface.fetchVal(A);
+	min = _interface.fetchVal(B, Element::min);
+	sub = _interface.fetchVal(A, Element::sub);
+	dif = min - sub;
 
 	if (_debug) {
-		std::cout << std::dec << getSigned(_interface.fetchVal(B)) << " - " << getSigned(_interface.fetchVal(A)) << " = " << getSigned(b) << std::endl;
+		std::cout << std::dec << getSigned(min) << " - " << getSigned(sub) << " = " << getSigned(dif) << std::endl;
 	}
 
-	_interface.putVal(b, B);
+	_interface.putVal(dif, B);
 
-	if (b == 0 || (b && (128 << (8 << _width)) != 0)) {
+	if (dif == 0 || (dif && (128 << (8 << _width)) != 0)) {
 		_pc = C;
 	}
 	else {
@@ -62,13 +66,10 @@ void State::cycle(void)
 // note that it operates on 8 bits at a time, regardless of the
 // value set for data width. Behaviour is undefined if length
 // is larger than the size of values
-// Replaced by _interface.ramInit()
-/*void State::ramInit(const size_t length, const uint8_t* values)
+void State::ramInit(const size_t length, const uint8_t* values)
 {
-	for (size_t i=0; i < length; i++) {
-		_ram[i] = values[i];
-	}
-}*/
+	_interface.ramInit(length, values);
+}
 
 // A getter for the internal halt flag, returns true if a halt
 // condition has been reached

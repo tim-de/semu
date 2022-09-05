@@ -5,14 +5,7 @@
 #include<iostream>
 
 #include"MemoryMap.hpp"
-
-namespace Width {
-	enum Enum {
-		b8 = 0,
-		b16,
-		b32
-	};
-}
+#include"Utils.hpp"
 
 // State holds the internal state of the emulated computer,
 // and has methods for performing processor cycles, as
@@ -26,7 +19,7 @@ class State {
 		State(Width::Enum width = Width::b8, bool debug = false);
 		// A destructor for State, necessary because of the need
 		// to assign heap space for ram
-		~State(void);
+		//~State(void);
 		// A getter for the _width member
 		const Width::Enum width(void) const;
 		// Performs a single cycle of computation

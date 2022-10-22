@@ -11,6 +11,9 @@ class Peripheral {
 	private:
 		std::vector<LinkPort> _portlist;
 	public:
+		Peripheral(void);
+		const auto listBegin() const;
+		const auto listEnd() const;
 };
 
 #endif

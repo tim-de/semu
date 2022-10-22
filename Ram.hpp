@@ -15,7 +15,9 @@ class Ram {
 		void init(const uint32_t length, const uint8_t* values);
 	private:
 		Width::Enum _width;
+		size_t _ramsize;
 		uint8_t* _ram;
+		const int getByteCount(const uint32_t addr) const;
 };
 
 #endif

@@ -24,10 +24,12 @@ class GPort {
 class Port {
 	private:
 		GPort* _port;
+		bool _owned;
 	public:
 		Port();
 		Port(uint32_t& value);
 		Port(uint32_t& r_value, uint32_t& w_value);
+		Port(GPort* port);
 		~Port();
 		void write(const uint32_t value);
 		const uint32_t read(const Element::Enum elem) const;

@@ -7,24 +7,34 @@
 GPort::GPort() { }
 GPort::~GPort() { }
 
-Port::Port()
+Port::Port():
+	_owned(true)
 {
 	_port = new IoPort;
 }
 
-Port::Port(uint32_t& value)
+Port::Port(uint32_t& value):
+	_owned(true)
 {
 	_port = new LinkPort(value);
 }
 
-Port::Port(uint32_t& r_value, uint32_t& w_value)
+Port::Port(uint32_t& r_value, uint32_t& w_value):
+	_owned(true)
 {
 	_port = new LinkPort(r_value, r_value);
 }
 
+Port::Port(GPort* port):
+	_owned(false),
+	_port(port)
+{  }
+
 Port::~Port()
 {
-	delete _port;
+	if (_owned) {
+		delete _port;
+	}
 }
 
 void Port::write(const uint32_t value) {

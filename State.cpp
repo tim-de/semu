@@ -7,11 +7,25 @@
 
 State::State(Width::Enum width, bool debug):
 	_width(width),
+	_interface(width),
 	_pc(0),
-	_debug(debug),
-	_interface(width)
+	_debug(debug)
 {
-	_interface.addMap((1 << (8 << _width)) - 1);
+	_interval = 1 << _width;
+
+	uint32_t io_addr;
+	switch (_width) {
+		case Width::b8:
+			io_addr = (uint32_t) UINT8_MAX;
+			break;
+		case Width::b16:
+			io_addr = (uint32_t) UINT16_MAX;
+			break;
+		case Width::b32:
+			io_addr = (uint32_t) UINT32_MAX;
+			break;
+	}
+	_interface.addMap(io_addr);
 }
 
 const Width::Enum State::width(void) const {
@@ -25,19 +39,19 @@ void State::cycle(void)
 
 	// If the computer has reached a halt state then do not perform
 	// any cpu cycles
-	if (_halted) {
+	/*if (_halted) {
 		return;
-	}
+	}*/
 
 	A = _interface.fetchVal(_pc, Element::addr);
-	B = _interface.fetchVal(_pc+1, Element::addr);
-	C = _interface.fetchVal(_pc+2, Element::addr);
+	B = _interface.fetchVal(_pc+_interval, Element::addr);
+	C = _interface.fetchVal(_pc+(2*_interval), Element::addr);
 
 	if (_debug) {
-		std::cout << std::showbase << std::hex << _pc << ": ";
-		std::cout << std::showbase << std::hex << A << " ";
-		std::cout << std::showbase << std::hex << B << " ";
-		std::cout << std::showbase << std::hex << C << std::endl;
+		std::cerr << std::showbase << std::hex << _pc << ": ";
+		std::cerr << std::showbase << std::hex << A << " ";
+		std::cerr << std::showbase << std::hex << B << " ";
+		std::cerr << std::showbase << std::hex << C << std::endl;
 	}
 
 	min = _interface.fetchVal(B, Element::min);
@@ -45,16 +59,17 @@ void State::cycle(void)
 	dif = min - sub;
 
 	if (_debug) {
-		std::cout << std::dec << getSigned(min) << " - " << getSigned(sub) << " = " << getSigned(dif) << std::endl;
+		std::cerr << std::dec << getSigned(min) << " - " << getSigned(sub) << " = " << getSigned(dif) << std::endl;
 	}
 
 	_interface.putVal(dif, B);
 
-	if (dif == 0 || (dif && (128 << (8 << _width)) != 0)) {
-		_pc = C;
+	if (getSigned(dif) > 0) {
+		_pc += 3 * _interval;
+		_pc &= -1 - (_interval-1);
 	}
 	else {
-		_pc += 3;
+		_pc = C;
 	}
 
 	if (getSigned(_pc) < 0) {

@@ -23,8 +23,11 @@ class MemoryMap {
 		//~MemoryMap(void);
 
 		void addMap(uint32_t addr);
+		void addMap(uint32_t addr, GPort* port);
 		void addMap(uint32_t addr, uint32_t& value);
 		void addMap(uint32_t addr, uint32_t& r_value, uint32_t& w_value);
+
+		void addPeripheral(Peripheral& device);
 
 		const uint32_t fetchVal(const uint32_t addr, const Element::Enum elem) const;
 		void putVal(const uint32_t value, const uint32_t addr);

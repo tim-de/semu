@@ -26,6 +26,11 @@ void MemoryMap::addMap(uint32_t addr, uint32_t& r_value, uint32_t& w_value)
 	_mappings.try_emplace(addr, r_value, w_value);
 }
 
+void MemoryMap::addMap(uint32_t addr, GPort* port)
+{
+	_mappings.try_emplace(addr, port);
+}
+
 void MemoryMap::ramInit(const size_t length, const uint8_t* values)
 {
 	_ram.init(length, values);

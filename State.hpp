@@ -32,6 +32,7 @@ class State {
 		//Members:
 
 		Width::Enum _width;
+		uint8_t _interval;
 		MemoryMap _interface;
 		uint32_t _pc;
 		bool _debug;
